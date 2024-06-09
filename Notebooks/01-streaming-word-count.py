@@ -1,7 +1,7 @@
 # Databricks notebook source
 class batchWC():
     def __init__(self):
-        self.base_data_dir = "/FileStore/data_spark_streaming_scholarnest"
+        self.base_data_dir = "/Volumes/main/streamprocessing/scholarnest/data_spark_streaming_scholarnest/"
 
     def getRawData(self):
         from pyspark.sql.functions import explode, split
@@ -26,7 +26,7 @@ class batchWC():
         ( wordCountDF.write
                     .format("delta")
                     .mode("overwrite")
-                    .saveAsTable("word_count_table")
+                    .saveAsTable("main.streamprocessing.word_count_table")
         )
     
     def wordCount(self):
@@ -41,7 +41,7 @@ class batchWC():
 
 class streamWC():
     def __init__(self):
-        self.base_data_dir = "/FileStore/data_spark_streaming_scholarnest"
+        self.base_data_dir = "/Volumes/main/streamprocessing/scholarnest/data_spark_streaming_scholarnest/"
 
     def getRawData(self):
         from pyspark.sql.functions import explode, split
@@ -67,7 +67,7 @@ class streamWC():
                     .format("delta")
                     .option("checkpointLocation", f"{self.base_data_dir}/chekpoint/word_count")
                     .outputMode("complete")
-                    .toTable("word_count_table")
+                    .toTable("main.streamprocessing.word_count_table")
                 )
     
     def wordCount(self):

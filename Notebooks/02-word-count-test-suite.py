@@ -5,12 +5,12 @@
 
 class batchWCTestSuite():
     def __init__(self):
-        self.base_data_dir = "/FileStore/data_spark_streaming_scholarnest"
+        self.base_data_dir = "/Volumes/main/streamprocessing/scholarnest/data_spark_streaming_scholarnest/"
 
     def cleanTests(self):
         print(f"Starting Cleanup...", end='')
-        spark.sql("drop table if exists word_count_table")
-        dbutils.fs.rm("/user/hive/warehouse/word_count_table", True)
+        spark.sql("drop table if exists main.streamprocessing.word_count_table")
+        #dbutils.fs.rm("abfss://sandbox-metastore@iawarelakehouse.dfs.core.windows.net/StreamProcessing/__unitystorage/schemas/7b263526-f551-45ce-8020-b848aeacb792/tables/95c85209-cf51-4a86-93db-b8ba8126631c", True)
 
         dbutils.fs.rm(f"{self.base_data_dir}/chekpoint", True)
         dbutils.fs.rm(f"{self.base_data_dir}/data/text", True)
@@ -25,7 +25,7 @@ class batchWCTestSuite():
 
     def assertResult(self, expected_count):
         print(f"\tStarting validation...", end='')
-        actual_count = spark.sql("select sum(count) from word_count_table where substr(word, 1, 1) == 's'").collect()[0][0]
+        actual_count = spark.sql("select sum(count) from main.streamprocessing.word_count_table where substr(word, 1, 1) == 's'").collect()[0][0]
         assert expected_count == actual_count, f"Test failed! actual count is {actual_count}"
         print("Done")
 
@@ -61,11 +61,11 @@ bwcTS.runTests()
 
 class streamWCTestSuite():
     def __init__(self):
-        self.base_data_dir = "/FileStore/data_spark_streaming_scholarnest"
+        self.base_data_dir = "/Volumes/main/streamprocessing/scholarnest/data_spark_streaming_scholarnest/"
 
     def cleanTests(self):
         print(f"Starting Cleanup...", end='')
-        spark.sql("drop table if exists word_count_table")
+        spark.sql("drop table if exists main.streamprocessing.word_count_table")
         dbutils.fs.rm("/user/hive/warehouse/word_count_table", True)
 
         dbutils.fs.rm(f"{self.base_data_dir}/chekpoint", True)
@@ -81,7 +81,7 @@ class streamWCTestSuite():
 
     def assertResult(self, expected_count):
         print(f"\tStarting validation...", end='')
-        actual_count = spark.sql("select sum(count) from word_count_table where substr(word, 1, 1) == 's'").collect()[0][0]
+        actual_count = spark.sql("select sum(count) from main.streamprocessing.word_count_table where substr(word, 1, 1) == 's'").collect()[0][0]
         assert expected_count == actual_count, f"Test failed! actual count is {actual_count}"
         print("Done")
 
